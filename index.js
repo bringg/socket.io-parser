@@ -8,6 +8,10 @@ var Emitter = require('component-emitter');
 var binary = require('./binary');
 var isArray = require('isarray');
 var isBuf = require('./is-buffer');
+const EventEmitter = require('events');
+
+const metricsEmitter = new EventEmitter();
+exports.metricsEmitter = metricsEmitter;
 
 /**
  * Protocol version.
@@ -132,6 +136,7 @@ Encoder.prototype.encode = function(obj, callback){
     encodeAsBinary(obj, callback);
   } else {
     var encoding = encodeAsString(obj);
+    metricsEmitter.emit('outgoing-packet', { packet: obj, raw: encoding });
     callback([encoding]);
   }
 };
@@ -248,6 +253,7 @@ Decoder.prototype.add = function(obj) {
         this.emit('decoded', packet);
       }
     } else { // non-binary full packet
+      metricsEmitter.emit('incoming-packet', { raw: obj, packet })
       this.emit('decoded', packet);
     }
   } else if (isBuf(obj) || obj.base64) { // raw binary data
