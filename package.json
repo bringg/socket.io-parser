@@ -38,8 +38,7 @@
     "test:node": "mocha --reporter dot --bail test/index.js",
     "test:browser": "zuul test/index.js --no-coverage",
     "format:fix": "prettier --write --parser typescript 'lib/**/*.ts' 'test/**/*.js'",
-    "format:check": "prettier --check --parser typescript 'lib/**/*.ts' 'test/**/*.js'",
-    "prepack": "npm run compile"
+    "format:check": "prettier --check --parser typescript 'lib/**/*.ts' 'test/**/*.js'"
   },
   "license": "MIT",
   "engines": {
