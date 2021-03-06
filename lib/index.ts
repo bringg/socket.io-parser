@@ -13,6 +13,8 @@ const debug = debugModule("socket.io-parser"); // debug()
 
 export const protocol: number = 5;
 
+export const metricsEmitter = new Emitter();
+
 export enum PacketType {
   CONNECT,
   DISCONNECT,
@@ -64,7 +66,10 @@ export class Encoder {
         });
       }
     }
-    return [this.encodeAsString(obj)];
+
+    const encoded = this.encodeAsString(obj);
+    metricsEmitter.emit("outgoing-packet", { packet: obj, raw: encoded });
+    return [encoded];
   }
 
   /**
@@ -165,6 +170,7 @@ export class Decoder extends Emitter<{}, {}, DecoderReservedEvents> {
         }
       } else {
         // non-binary full packet
+        metricsEmitter.emit("incoming-packet", { raw: obj, packet });
         super.emitReserved("decoded", packet);
       }
     } else if (isBinary(obj) || obj.base64) {
