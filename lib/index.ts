@@ -12,6 +12,8 @@ const debug = require("debug")("socket.io-parser");
 
 export const protocol: number = 5;
 
+export const metricsEmitter = new Emitter();
+
 export enum PacketType {
   CONNECT,
   DISCONNECT,
@@ -53,7 +55,10 @@ export class Encoder {
         return this.encodeAsBinary(obj);
       }
     }
-    return [this.encodeAsString(obj)];
+
+    const encoded = this.encodeAsString(obj);
+    metricsEmitter.emit("outgoing-packet", { packet: obj, raw: encoded });
+    return [encoded];
   }
 
   /**
@@ -143,6 +148,7 @@ export class Decoder extends Emitter {
         }
       } else {
         // non-binary full packet
+        metricsEmitter.emit("incoming-packet", { raw: obj, packet });
         super.emit("decoded", packet);
       }
     } else if (isBinary(obj) || obj.base64) {
