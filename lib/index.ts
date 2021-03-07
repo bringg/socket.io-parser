@@ -46,12 +46,9 @@ export class Encoder {
   public encode(obj: Packet) {
     debug("encoding packet %j", obj);
 
-    if (obj.type === PacketType.EVENT || obj.type === PacketType.ACK) {
+    if (obj.type === PacketType.ACK) {
       if (hasBinary(obj)) {
-        obj.type =
-          obj.type === PacketType.EVENT
-            ? PacketType.BINARY_EVENT
-            : PacketType.BINARY_ACK;
+        obj.type = PacketType.BINARY_ACK;
         return this.encodeAsBinary(obj);
       }
     }
