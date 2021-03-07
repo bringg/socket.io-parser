@@ -53,13 +53,10 @@ export class Encoder {
   public encode(obj: Packet) {
     debug("encoding packet %j", obj);
 
-    if (obj.type === PacketType.EVENT || obj.type === PacketType.ACK) {
+    if (obj.type === PacketType.ACK) {
       if (hasBinary(obj)) {
         return this.encodeAsBinary({
-          type:
-            obj.type === PacketType.EVENT
-              ? PacketType.BINARY_EVENT
-              : PacketType.BINARY_ACK,
+          type: PacketType.BINARY_ACK,
           nsp: obj.nsp,
           data: obj.data,
           id: obj.id,
