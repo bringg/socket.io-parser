@@ -48,8 +48,7 @@
     "test:node": "mocha --reporter dot --bail test/index.js",
     "test:browser": "wdio",
     "format:fix": "prettier --write --parser typescript '*.js' 'lib/**/*.ts' 'test/**/*.js'",
-    "format:check": "prettier --check --parser typescript '*.js' 'lib/**/*.ts' 'test/**/*.js'",
-    "prepack": "npm run compile"
+    "format:check": "prettier --check --parser typescript '*.js' 'lib/**/*.ts' 'test/**/*.js'"
   },
   "license": "MIT",
   "engines": {
